@@ -1,0 +1,29 @@
+
+rec map f xs = match xs with
+| [] -> []
+| x::xs' -> (f x):: map f xs'
+
+Twierdzenie : map f (map g xs) ≡ map (fun x -> f (g x)) xs
+
+Podstawa ind:
+dziala dla []
+D-d:
+map f []
+==def map
+[]
+==def map
+map (fun x -> f (g x)) xs
+
+Krok indukcji:
+Zal ze dziala dla listy xs
+pokaze dla x::xs
+
+map f (map g x::xs)
+== def map
+map f (g x)::(map g xs)
+== def map
+(f (g x)) :: map f (map g xs)
+== zal ind
+(f (g x)) :: map (fun x -> f (g x)) xs
+== def map
+map (fun x -> f (g x)) x::xs

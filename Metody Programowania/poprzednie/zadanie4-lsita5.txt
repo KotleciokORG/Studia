@@ -1,0 +1,42 @@
+type 'v nnf =
+| NNFLit of bool * 'v
+| NNFConj of 'v nnf * 'v nnf
+| NNFDisj of 'v nnf * 'v nnf
+
+
+
+let rec neg_nnf fi = 
+match fi with 
+| NNFLit(a,phi) -> NNFLit(not a,phi)
+| NNFConj(phi, psi) -> NNFDisj(neg_nnf phi, neg_nnf psi)
+| NNFDisj(phi, psi) -> NNFConj(neg_nnf phi, neg_nnf psi)
+
+neg_nnf (neg_nnf φ) ≡ φ
+
+Podstawa ind 
+Dziala dla NNFLit
+D-d
+neg_nnf (neg_nnf (a, fi))
+== def neg_nnf
+neg_nnf (not a, fi)
+== def neg_nnf 
+not not a, fi
+== logika
+a, fi
+
+Krok ind
+Zal ze dla dlugosci <n dziala
+Pokaze ze dla n dziala
+
+Rozwaze 
+neg_nnf (neg_nnf NNFConj(a, fi))
+== def neg_nnf
+neg_nnf (NNFDisj(neg_nnf phi, neg_nnf psi))
+== def neg_nnf
+NNFConj (neg_nnf neg_nnf phi, neg_nnf neg_nnf psi)
+== zal ind
+NNFConj(a, fi)
+
+Analogicznie
+
+

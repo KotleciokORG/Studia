@@ -1,0 +1,17 @@
+type 'v nnf =
+| NNFLit of bool * 'v
+| NNFConj of 'v nnf * 'v nnf
+| NNFDisj of 'v nnf * 'v nnf
+
+
+Sformuluj zasade indukcji
+
+Zasada indukcji
+Zakladajac ze dla formul dlugosci mniejszych od n dziala, dziala dla n
+
+Podstawa ind 
+Udowodnij dla NNFLit / pojedynczego elementu
+
+Krok ind
+Zakladajac powyzsze, udowodnij ze NNFConj (koniunkcja) oraz NNFDisj (alternatywa) dziala
+

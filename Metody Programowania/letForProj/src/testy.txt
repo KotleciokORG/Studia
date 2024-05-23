@@ -1,0 +1,16 @@
+let x = Let("x",Int(10),Binop(Add, Var("w"), Binop(Add,Var("y"),Var("x"))))
+let big_y = Let("z",Int(10),Binop(Add, Let("x",Int(10),Binop(Add, Var("w"), Binop(Add,Var("y"),Var("x")))), Binop(Add,Var("y"),Var("z"))))
+
+let test1 = Let("x",Let("z",Int(10),Binop(Add,Binop(Add,Var("y"),Var("z")),Var("z"))),Binop(Add,Binop(Add,Var("y"),Var("x")),Var("x")))
+let test2 = Let("z",Int(10),Binop(Add,Binop(Add,Var("y"),Var("z")),Var("z")))
+
+
+
+let smal1 = Binop(Add,Var("y"),Var("x"))
+let smal2 = Let("x",Int(10),Binop(Add, Var("w"), Binop(Add,Var("y"),Var("x"))))
+
+let big_w = Let("x",Binop(Add,Var("x"),Var("y")),Binop(Mult,Binop(Add,Var("x"),Var("z")),Binop(Add,Var("x"),Var("z"))))
+
+
+let new1 = "let x = 3 in ( let x = 2 in ( ( let x = 4 in x * x ) + x * x ) )"
+let new2 = "let x = 3 in ( let x = 2 in ( ( let x = 4 in x * x ) + ( let x = 5 in x * x ) ) )"

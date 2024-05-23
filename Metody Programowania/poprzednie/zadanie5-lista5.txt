@@ -1,0 +1,46 @@
+type 'v nnf =
+| NNFLit of bool * 'v
+| NNFConj of 'v nnf * 'v nnf
+| NNFDisj of 'v nnf * 'v nnf
+;;
+(*eval_nnf typu ('a -> bool) -> 'a nnf -> bool*)
+
+let rec neg_nnf fi = 
+match fi with 
+| NNFLit(a,phi) -> NNFLit(not a,phi)
+| NNFConj(phi, psi) -> NNFDisj(neg_nnf phi, neg_nnf psi)
+| NNFDisj(phi, psi) -> NNFConj(neg_nnf phi, neg_nnf psi)
+
+let rec eval_nnf sigma fi = match fi with
+| NNFLit (a, psi) -> if a = false then not (sigma a) else sigma a
+| NNFConj (phi, psi) -> eval_nnf sigma phi && eval_nnf sigma psi
+| NNFDisj (phi, psi) -> eval_nnf sigma phi || eval_nnf sigma psi
+
+eval_nnf σ (neg_nnf φ) ≡ not (eval_nnf σ φ)
+
+Podstawa done dla dl 1
+
+Krok 
+Zalozmy ze dla dlugosci <n zachodzi
+
+eval_nnf σ (neg_nnf φ)
+== def neg_nnf
+Jezeli NNFConj
+eval_nnf sigma (NNFDisj(neg_nnf phi, neg_nnf psi))
+== def eval_nnf
+eval_nnf sigma neg_nnf phi || eval_nnf sigma neg_nnf psi
+== zal ind
+not (eval_nnf sigma phi) || not (eval_nnf sigma psi)
+== zasady logiki
+not (eval_nnf sigma phi && eval_nnf sigma psi)
+== def eval_nnf
+not (eva_nnf sigma fi)
+
+
+
+Jezeli NNFDisj
+eva_nnf sigma (NNFConj(neg_nnf phi, neg_nnf psi))
+== def eval_nnf
+eval_nnf sigma neg_nnf phi && eval_nnf sigma neg_nnf psi
+
+
