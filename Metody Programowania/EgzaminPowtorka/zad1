@@ -1,0 +1,147 @@
+type tree = 
+| Node of tree*int*tree
+| Leaf
+
+let rec insert_bst x t =
+  match t with
+  | Leaf -> Node(Leaf,x,Leaf)
+  | Node (l,el,r) -> if x < el then Node (insert_bst x l, el, r) else Node (l,el,Node (insert_bst x l, el, r))
+
+let list_bst xs = 
+  List.fold_left (fun t x-> insert_bst x t) Leaf xs 
+
+let rec bst_list tree = 
+  match tree with
+  | Leaf -> []
+  | Node (l,el,r) -> bst_list l @ [el] @ bst_list r
+
+Generuje nieuzytki
+
+
+type formula = 
+| BotF
+| VarF of string
+| ImpF of formula * formula
+
+(*
+Zasada indukcji
+
+Ustalmy P(f) - warunek na formule
+
+Jezeli P zachodzi dla 
+BotF
+VarF 
+oraz 
+P(f1) i P(f2) zachodzi P(f)
+
+to P zachodzi dla kazdej formuly formula
+*)
+
+let returnM x = 
+  VarF x
+
+let rec bindM m f = 
+  match m with 
+  | VarF x -> f x
+  | BotF -> BotF
+  | ImpF (m1, m2) -> ImpF (bindM m1 f, bindM m2 f)
+
+let foo m = 
+  bindM m (fun a -> m)
+
+(*  typ foo to formula -> formula  *)
+
+(*
+f - funkcja
+m - formula
+Teza :  bindM (returnM a) f <=> f a
+        bindM m returnM <=> m
+        bindM (bindM m f) g <=> (bindM m (fun a -> (bindM (f a) g )))
+
+1. bindM (returnM a) f <=> bindM (VarF a) <=> f a
+2. bindM m returnM <=> 
+  1) m = VarF x -> returnM x <=> VarF x  
+  2) m = BotF -> BotF
+  3) m = ImpF (m1, m2) -> 
+    Zalozmy ze 
+      bindM m1 returnM <=> m1
+      bindM m2 returnM <=> m2
+    Wtedy
+      bindM m returnM <=> ImpF (bindM m1 returnM, bindM m2 returnM)
+      <=> ImpF (m1, m2)
+3.  bindM (bindM m f) g <=> (bindM m (fun a -> (bindM (f a) g )))
+Niech to bedzie warunek P(m) dla dowolnych f i g
+  1) P(BotF) 
+    <=> [  bindM (bindM BotF f) g <=> (bindM BotF (fun a -> (bindM (f a) g )))  ]))
+    <=> [  bindM BotF g <=> BotF  ]
+    <=> [  BotF <=> BotF  ] <=> True
+  2) P(VarF x)
+    <=> [  bindM (bindM (VarF x) f) g <=> (bindM (VarF x) (fun a -> (bindM (f a) g )))  ]
+    <=> [  bindM (f x) g <=> (bindM (bindM (f x) g ))  ]
+    <=> [  g ( f x ) <=> (bindM (bindM (f x) g ))  ]
+*)
+
+
+(*
+
+
+type formula = 
+| BotF
+| VarF of string
+| ImpF of formula * formula
+
+
+(T,N,P)
+
+T = {bottom, a}
+N = {I}
+P = {I -> (I => (I)) lub a lub bottom }
+Start = I
+
+
+*)
+(*  mamy env i lookup i extend  *)
+
+
+
+
+type exp = 
+| Num of int
+| Add of exp*exp
+| Var of string
+| Fun of string list * exp
+| Apply of exp * exp list
+| Let of string list * exp list * exp
+
+module M = Map.Make(String)
+
+
+type env = value M.t and
+value = 
+| Int of int
+| Closure of string list * exp * env
+
+
+let rec eval (e : exp) (env : env) : value = 
+  match e with
+  | Num a -> Int a
+  | Add (e1,e2) -> (match (eval e1 env), (eval e2 env) with 
+                    | Int a, Int b -> Int(a+b)
+                    | _,_ -> failwith("jebaka"))
+  | Var i -> Int(  (*lookup_env i*)  1)
+  | Fun (ss,e) -> Closure(ss,e,env)
+  | Apply (e1,e_list) -> 
+    (match eval e1 env with 
+    | Closure(ss,e2,env') -> 
+      (match ss,e_list with
+      | s::ss', e::e_list -> (*extend_env env' s  *)Int 3
+      | _ -> failwith ("szajse")
+      )
+    | _ -> failwith("szajse")
+    )
+  | 
+
+
+(**)
+
+

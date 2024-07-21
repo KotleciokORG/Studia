@@ -1,0 +1,31 @@
+let insert = fix (fun insert -> fun t -> fun x ->
+  match t with
+  | Nil() -> Cons ( Cons ( Nil() , x ) , Nil() )
+  | Cons(Cons(l,v),r) -> if x < v then Cons(Cons(insert l x, v),r) else Cons(Cons(l, v),insert r x)
+  end)
+  in 
+  
+let append = fix(fun append -> fun xs -> fun ys -> 
+  match xs with
+  | Nil() -> ys
+  | Cons(x,xs) -> Cons(x,append xs ys)
+  end)
+  in
+
+let flatten = fix (fun flatten -> fun t -> 
+  match t with
+  | Nil() -> Nil()
+  | Cons(Cons(l,v),r) -> append (flatten l) (Cons(v, flatten r)) 
+  end)
+  in 
+
+
+let sort = fix (fun sort -> fun xs -> fun t -> 
+  match xs with 
+  | Nil() -> flatten t
+  | Cons(x,ys) -> sort ys (insert t x)
+  end)
+  in
+
+  sort (Cons(5,Cons(1,Cons(3,Cons(2,Nil()))))) (Nil())
+
